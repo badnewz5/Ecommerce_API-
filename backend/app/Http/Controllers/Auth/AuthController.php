@@ -17,7 +17,11 @@ class AuthController extends  Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $token = JWTAuth::fromUser(Auth::user());
-            return response()->json(['token' => $token]);
+            if (Auth::user()->hasRole('user-customer')){
+                return response()->json(['token' => $token,'role'=>'user-customer']);
+            }else{
+                return response()->json(['token' => $token,'role'=>'super-admin']);
+            }
         }
         return response()->json(['error' => 'Invalid credentials'], 401);
 

@@ -19,7 +19,7 @@ class RolesAndPermissionSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         //create permissions
         $arrayOfPermissionNames = [
-            'view-referrals', 'create-referrals','destroy-referrals','edit-referrals','View users referral history',
+            'view-referrals', 'create-referrals','destroy-referrals','edit-referrals','view-users-referral-history',
             'view-products','create-product','edit-product','destroy-product',
             'view-purchase','create-purchase','edit-purchase','destroy-purchase',
             'view-user-order','View-user-order-history','user-create-order','view-user-orders-payment',
@@ -39,6 +39,9 @@ class RolesAndPermissionSeeder extends Seeder
 
         // create roles and assign permissions
 
+
+        $role1 = Role::create(['name' => 'user-customer']);
+        $role1->givePermissionTo(['view-user-order','View-user-order-history','user-create-order','view-user-orders-payment','view-user-referral-history']);
 
         $role = Role::create(['name' => 'super-admin']);
         $role->givePermissionTo(Permission::all());

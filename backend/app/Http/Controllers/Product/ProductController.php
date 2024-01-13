@@ -38,11 +38,17 @@ class ProductController extends Controller
     }
     public function store(ProductRequest $request)
     {
-        $validatedData = $request->validated();
 
-        // Create a new product
-        $product = Product::create($validatedData);
+        if ($request->user()->hasRole('user-customer')){
+            return response()->json(['message' => "Only admin can create product"], 401);
 
-        return response()->json(['product' => $product], 201);
+        }else {
+            $validatedData = $request->validated();
+
+            // Create a new product
+            $product = Product::create($validatedData);
+
+            return response()->json(['product' => $product], 201);
+        }
     }
 }

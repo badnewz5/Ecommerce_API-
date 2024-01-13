@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
-
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -23,6 +22,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+//            'role' => 'required|in:super-admin,user-customer',
 //            'password_confirmation' => 'required|string|same:password',
         ]);
 
@@ -34,13 +34,17 @@ class UserController extends Controller
             'email' => $request->json()->get('email'),
             'password' => Hash::make($request->json()->get('password')),
         ]);
-        $user->assignRole('user-customer');
+       $user->assignRole('user-customer');
+
+        // Assign the role to the user
+//        $role = Role::where('name', $request->role)->first();
+//        $user->assignRole($role);
 
         $token = JWTAuth::fromUser($user);
 
 
         return response()->json(compact('user','token'),201);
-        return response()->json(['message'=>$request,'validator'=>$validator]);
+//        return response()->json(['message'=>$request,'validator'=>$validator]);
     }
     public function login(Request $request) {
         $credentials = $request->json()->all();
